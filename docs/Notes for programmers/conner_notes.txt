@@ -1,0 +1,2 @@
+To exit venv:
+deactivate

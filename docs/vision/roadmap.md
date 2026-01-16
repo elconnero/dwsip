@@ -32,12 +32,11 @@
   sqlalchemy
   alembic
   psycopg2-binary
-  python-jose[cryptography]
-  passlib[bcrypt]
   python-dotenv
   openai
   httpx
   pydantic
+  pyjwt
   ```
 
 - [ ] **Step 1.5** - Install Python dependencies
@@ -60,10 +59,10 @@
   DATABASE_URL=
   OPENAI_API_KEY=
   RAWG_API_KEY=
-  JWT_SECRET=
 
   # frontend/.env
   VITE_API_URL=http://localhost:8000
+  VITE_NEON_AUTH_URL=
   ```
 
 ---
@@ -128,10 +127,9 @@
   ```
 
 - [ ] **Step 3.4** - Create SQLAlchemy models in `app/models/`
-  - `user.py` - User model
   - `recommendation.py` - Recommendation model
   - `game.py` - Game model
-  - `saved_game.py` - UserSavedGame model
+  - `saved_game.py` - UserSavedGame model (uses Neon Auth user_id)
 
 - [ ] **Step 3.5** - Create first migration
   ```bash
@@ -141,28 +139,39 @@
 
 ---
 
-## Phase 4: Authentication
-> Let users sign up and log in
+## Phase 4: Authentication (Neon Auth)
+> Let users sign up and log in using Neon's managed auth
 
-- [ ] **Step 4.1** - Create Pydantic schemas in `app/schemas/`
-  - `user.py` - UserCreate, UserLogin, UserResponse
+- [ ] **Step 4.1** - Get Neon Auth credentials from your Neon dashboard
+  - Find your project's Auth settings
+  - Copy the JWKS URL and other auth configuration
 
-- [ ] **Step 4.2** - Create auth utilities in `app/services/auth.py`
-  - Password hashing with passlib
-  - JWT token creation/verification with python-jose
+- [ ] **Step 4.2** - Install Neon Auth SDK in frontend
+  ```bash
+  cd frontend
+  npm install @neondatabase/toolkit
+  ```
 
-- [ ] **Step 4.3** - Create auth router in `app/routers/auth.py`
-  - POST `/auth/register` - Create new user
-  - POST `/auth/login` - Return JWT token
-  - GET `/auth/me` - Get current user (protected)
+- [ ] **Step 4.3** - Create auth utilities in `app/services/auth.py`
+  - JWT token verification using Neon's JWKS endpoint
+  - Decode and validate tokens from Neon Auth
 
 - [ ] **Step 4.4** - Create dependency for protected routes
   ```python
-  def get_current_user(token: str = Depends(oauth2_scheme)):
-      # Verify JWT and return user
+  async def get_current_user(authorization: str = Header(...)):
+      # Verify JWT from Neon Auth
+      # Extract user info from token
   ```
 
-- [ ] **Step 4.5** - Test auth endpoints in Swagger UI
+- [ ] **Step 4.5** - Create Pydantic schemas in `app/schemas/`
+  - `user.py` - UserResponse schema
+
+- [ ] **Step 4.6** - Set up frontend auth components
+  - Integrate Neon Auth login/signup UI
+  - Store auth tokens in frontend
+  - Add auth headers to API requests
+
+- [ ] **Step 4.7** - Test auth flow end-to-end
 
 ---
 
@@ -333,6 +342,7 @@ dwisp/
 ├── docs/
 │   ├── claude-notes.md
 │   ├── tech-stack.md
+│   ├── folder-structure.md
 │   └── roadmap.md
 ├── backend/
 │   ├── app/
@@ -342,7 +352,6 @@ dwisp/
 │   │   ├── database.py
 │   │   ├── models/
 │   │   │   ├── __init__.py
-│   │   │   ├── user.py
 │   │   │   ├── game.py
 │   │   │   ├── recommendation.py
 │   │   │   └── saved_game.py
@@ -353,13 +362,12 @@ dwisp/
 │   │   │   └── prompt.py
 │   │   ├── routers/
 │   │   │   ├── __init__.py
-│   │   │   ├── auth.py
 │   │   │   ├── prompt.py
 │   │   │   ├── games.py
 │   │   │   └── saved_games.py
 │   │   └── services/
 │   │       ├── __init__.py
-│   │       ├── auth.py
+│   │       ├── auth.py            # Neon Auth token verification
 │   │       ├── openai_service.py
 │   │       └── rawg_service.py
 │   ├── alembic/
@@ -375,8 +383,7 @@ dwisp/
 │   │   │   └── LoadingSpinner.tsx
 │   │   ├── pages/
 │   │   │   ├── Home.tsx
-│   │   │   ├── Login.tsx
-│   │   │   ├── Signup.tsx
+│   │   │   ├── Auth.tsx           # Neon Auth integration
 │   │   │   └── SavedGames.tsx
 │   │   ├── services/
 │   │   │   └── api.ts
