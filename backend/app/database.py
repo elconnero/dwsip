@@ -1,6 +1,14 @@
-import sqlalchemy as sa
-from sqlalchemy.orm import Mapped, mapped_column, sessionmaker, declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+from app.config import DATABASE_URL
 
-db = sa.create_engine("DATABASE_URL")
-Session = sessionmaker(bind = db)
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
