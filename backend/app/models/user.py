@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Date, func
+from sqlalchemy import Column, Integer, String, DateTime, Date, func, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from app.database import Base
 
@@ -19,6 +19,8 @@ class RateLimit(Base):
     neon_user_id = Column(String(255), nullable=False)
     request_date = Column(Date, nullable=False)
     request_count = Column(Integer, default=0)
+
+    __table_args__ = (UniqueConstraint("neon_user_id", "request_date"),)
 
 class UserPreferences(Base):
     __tablename__ = "user_preferences"

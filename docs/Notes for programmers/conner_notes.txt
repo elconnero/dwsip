@@ -1,2 +1,14 @@
 To exit venv:
 deactivate
+
+  Step 1 — Go to your Neon dashboard → select your project → click "Connection Details" → copy the connection string. It'll look like:
+  postgresql://username:password@ep-xxxxx.region.aws.neon.tech/dbname?sslmode=require
+
+  Step 2 — Paste it into backend/.env:
+  DATABASE_URL=postgresql://username:password@ep-xxxxx...?sslmode=require
+
+  Step 3 — Run the migration from the backend/ folder:
+  cd backend
+  alembic upgrade head
+
+  That will create all 10 tables in your Neon database automatically.

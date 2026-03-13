@@ -3,7 +3,7 @@
 ## Phase 1: Project Setup
 > Get the foundation in place
 
-- [ ] **Step 1.1** - Create folder structure
+- [x ] **Step 1.1** - Create folder structure
   ```
   dwisp/
   ├── frontend/
@@ -11,21 +11,22 @@
   └── docs/
   ```
 
-- [ ] **Step 1.2** - Initialize Git repository
+- [ x] **Step 1.2** - Initialize Git repository
   ```bash
   git init
   git add .
   git commit -m "Initial project structure"
   ```
 
-- [ ] **Step 1.3** - Set up Python virtual environment
+- [x ] **Step 1.3** - Set up Python virtual environment
   ```bash
   cd backend
   python -m venv venv
   source venv/bin/activate  # Linux/Mac
+  .\venv\Scripts\Activate.ps1
   ```
 
-- [ ] **Step 1.4** - Create `backend/requirements.txt`
+- [ x] **Step 1.4** - Create `backend/requirements.txt`
   ```
   fastapi
   uvicorn[standard]
@@ -39,12 +40,12 @@
   pyjwt
   ```
 
-- [ ] **Step 1.5** - Install Python dependencies
+- [x ] **Step 1.5** - Install Python dependencies
   ```bash
   pip install -r requirements.txt
   ```
 
-- [ ] **Step 1.6** - Initialize React frontend
+- [x ] **Step 1.6** - Initialize React frontend
   ```bash
   cd frontend
   npm create vite@latest . -- --template react-ts
@@ -53,7 +54,7 @@
   npx tailwindcss init -p
   ```
 
-- [ ] **Step 1.7** - Create `.env` files
+- [x ] **Step 1.7** - Create `.env` files
   ```
   # backend/.env
   DATABASE_URL=
@@ -70,7 +71,7 @@
 ## Phase 2: Backend Foundation
 > Set up FastAPI and basic structure
 
-- [ ] **Step 2.1** - Create backend folder structure
+- [x ] **Step 2.1** - Create backend folder structure
   ```
   backend/
   ├── app/
@@ -87,7 +88,7 @@
   └── .env
   ```
 
-- [ ] **Step 2.2** - Create `app/main.py` with basic FastAPI app
+- [x ] **Step 2.2** - Create `app/main.py` with basic FastAPI app
   ```python
   from fastapi import FastAPI
   from fastapi.middleware.cors import CORSMiddleware
@@ -117,21 +118,21 @@
 ## Phase 3: Database Setup
 > Set up PostgreSQL and define your schema
 
-- [ ] **Step 3.1** - Sign up for Neon (https://neon.tech) - get your DATABASE_URL
+- [x ] **Step 3.1** - Sign up for Neon (https://neon.tech) - get your DATABASE_URL
 
-- [ ] **Step 3.2** - Create `app/database.py` with SQLAlchemy setup
+- [ x] **Step 3.2** - Create `app/database.py` with SQLAlchemy setup
 
-- [ ] **Step 3.3** - Initialize Alembic
+- [ x] **Step 3.3** - Initialize Alembic
   ```bash
   alembic init alembic
   ```
 
-- [ ] **Step 3.4** - Create SQLAlchemy models in `app/models/`
+- [x ] **Step 3.4** - Create SQLAlchemy models in `app/models/`
   - `recommendation.py` - Recommendation model
   - `game.py` - Game model
   - `saved_game.py` - UserSavedGame model (uses Neon Auth user_id)
 
-- [ ] **Step 3.5** - Create first migration
+- [x ] **Step 3.5** - Create first migration
   ```bash
   alembic revision --autogenerate -m "initial tables"
   alembic upgrade head
@@ -142,36 +143,36 @@
 ## Phase 4: Authentication (Neon Auth)
 > Let users sign up and log in using Neon's managed auth
 
-- [ ] **Step 4.1** - Get Neon Auth credentials from your Neon dashboard
+- [x ] **Step 4.1** - Get Neon Auth credentials from your Neon dashboard
   - Find your project's Auth settings
   - Copy the JWKS URL and other auth configuration
 
-- [ ] **Step 4.2** - Install Neon Auth SDK in frontend
+- [ x] **Step 4.2** - Install Neon Auth SDK in frontend
   ```bash
   cd frontend
   npm install @neondatabase/toolkit
   ```
 
-- [ ] **Step 4.3** - Create auth utilities in `app/services/auth.py`
+- [ x] **Step 4.3** - Create auth utilities in `app/services/auth.py`
   - JWT token verification using Neon's JWKS endpoint
   - Decode and validate tokens from Neon Auth
 
-- [ ] **Step 4.4** - Create dependency for protected routes
+- [x ] **Step 4.4** - Create dependency for protected routes
   ```python
   async def get_current_user(authorization: str = Header(...)):
       # Verify JWT from Neon Auth
       # Extract user info from token
   ```
 
-- [ ] **Step 4.5** - Create Pydantic schemas in `app/schemas/`
+- [x ] **Step 4.5** - Create Pydantic schemas in `app/schemas/`
   - `user.py` - UserResponse schema
 
-- [ ] **Step 4.6** - Set up frontend auth components
+- [ x] **Step 4.6** - Set up frontend auth components
   - Integrate Neon Auth login/signup UI
   - Store auth tokens in frontend
   - Add auth headers to API requests
 
-- [ ] **Step 4.7** - Test auth flow end-to-end
+- [x ] **Step 4.7** - Test auth flow end-to-end
 
 ---
 
