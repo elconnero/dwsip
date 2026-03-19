@@ -3,421 +3,187 @@
 ## Phase 1: Project Setup
 > Get the foundation in place
 
-- [x ] **Step 1.1** - Create folder structure
-  ```
-  dwisp/
-  ├── frontend/
-  ├── backend/
-  └── docs/
-  ```
-
-- [ x] **Step 1.2** - Initialize Git repository
-  ```bash
-  git init
-  git add .
-  git commit -m "Initial project structure"
-  ```
-
-- [x ] **Step 1.3** - Set up Python virtual environment
-  ```bash
-  cd backend
-  python -m venv venv
-  source venv/bin/activate  # Linux/Mac
-  .\venv\Scripts\Activate.ps1
-  ```
-
-- [ x] **Step 1.4** - Create `backend/requirements.txt`
-  ```
-  fastapi
-  uvicorn[standard]
-  sqlalchemy
-  alembic
-  psycopg2-binary
-  python-dotenv
-  openai
-  httpx
-  pydantic
-  pyjwt
-  ```
-
-- [x ] **Step 1.5** - Install Python dependencies
-  ```bash
-  pip install -r requirements.txt
-  ```
-
-- [x ] **Step 1.6** - Initialize React frontend
-  ```bash
-  cd frontend
-  npm create vite@latest . -- --template react-ts
-  npm install
-  npm install tailwindcss postcss autoprefixer axios react-router-dom
-  npx tailwindcss init -p
-  ```
-
-- [x ] **Step 1.7** - Create `.env` files
-  ```
-  # backend/.env
-  DATABASE_URL=
-  OPENAI_API_KEY=
-  RAWG_API_KEY=
-
-  # frontend/.env
-  VITE_API_URL=http://localhost:8000
-  VITE_NEON_AUTH_URL=
-  ```
+- [x] **Step 1.1** - Create folder structure
+- [x] **Step 1.2** - Initialize Git repository
+- [x] **Step 1.3** - Set up Python virtual environment
+- [x] **Step 1.4** - Create `backend/requirements.txt`
+- [x] **Step 1.5** - Install Python dependencies
+- [x] **Step 1.6** - Initialize React frontend (Vite + React + TypeScript)
+- [x] **Step 1.7** - Create `.env` files
 
 ---
 
 ## Phase 2: Backend Foundation
 > Set up FastAPI and basic structure
 
-- [x ] **Step 2.1** - Create backend folder structure
-  ```
-  backend/
-  ├── app/
-  │   ├── __init__.py
-  │   ├── main.py           # FastAPI app entry
-  │   ├── config.py         # Environment variables
-  │   ├── database.py       # Database connection
-  │   ├── models/           # SQLAlchemy models
-  │   ├── schemas/          # Pydantic schemas
-  │   ├── routers/          # API routes
-  │   └── services/         # Business logic
-  ├── alembic/              # Migrations
-  ├── requirements.txt
-  └── .env
-  ```
-
-- [x ] **Step 2.2** - Create `app/main.py` with basic FastAPI app
-  ```python
-  from fastapi import FastAPI
-  from fastapi.middleware.cors import CORSMiddleware
-
-  app = FastAPI(title="DWISP API")
-
-  app.add_middleware(
-      CORSMiddleware,
-      allow_origins=["http://localhost:5173"],
-      allow_methods=["*"],
-      allow_headers=["*"],
-  )
-
-  @app.get("/health")
-  def health_check():
-      return {"status": "healthy"}
-  ```
-
-- [ ] **Step 2.3** - Test backend runs
-  ```bash
-  uvicorn app.main:app --reload
-  # Visit http://localhost:8000/docs for Swagger UI
-  ```
+- [x] **Step 2.1** - Create backend folder structure
+- [x] **Step 2.2** - Create `app/main.py` with FastAPI + CORS middleware
+- [x] **Step 2.3** - Confirm backend runs with `/health_check` endpoint
 
 ---
 
 ## Phase 3: Database Setup
-> Set up PostgreSQL and define your schema
+> Set up PostgreSQL and define schema
 
-- [x ] **Step 3.1** - Sign up for Neon (https://neon.tech) - get your DATABASE_URL
-
-- [ x] **Step 3.2** - Create `app/database.py` with SQLAlchemy setup
-
-- [ x] **Step 3.3** - Initialize Alembic
-  ```bash
-  alembic init alembic
-  ```
-
-- [x ] **Step 3.4** - Create SQLAlchemy models in `app/models/`
-  - `recommendation.py` - Recommendation model
-  - `game.py` - Game model
-  - `saved_game.py` - UserSavedGame model (uses Neon Auth user_id)
-
-- [x ] **Step 3.5** - Create first migration
-  ```bash
-  alembic revision --autogenerate -m "initial tables"
-  alembic upgrade head
-  ```
+- [x] **Step 3.1** - Sign up for Neon — get `DATABASE_URL`
+- [x] **Step 3.2** - Create `app/database.py` with SQLAlchemy setup
+- [x] **Step 3.3** - Initialize Alembic
+- [x] **Step 3.4** - Create SQLAlchemy models in `app/models/`
+  - `game.py` — Game, GameStore, GameGenre, GameTag
+  - `recommendation.py` — Recommendation, RecommendationGame
+  - `saved_game.py` — SavedGame
+  - `user.py` — UserViolation, RateLimit, UserPreferences
+- [x] **Step 3.5** - Create and apply initial migration (all 10 tables)
 
 ---
 
 ## Phase 4: Authentication (Neon Auth)
-> Let users sign up and log in using Neon's managed auth
+> Let users sign up and log in
 
-- [x ] **Step 4.1** - Get Neon Auth credentials from your Neon dashboard
-  - Find your project's Auth settings
-  - Copy the JWKS URL and other auth configuration
-
-- [ x] **Step 4.2** - Install Neon Auth SDK in frontend
-  ```bash
-  cd frontend
-  npm install @neondatabase/toolkit
-  ```
-
-- [ x] **Step 4.3** - Create auth utilities in `app/services/auth.py`
-  - JWT token verification using Neon's JWKS endpoint
-  - Decode and validate tokens from Neon Auth
-
-- [x ] **Step 4.4** - Create dependency for protected routes
-  ```python
-  async def get_current_user(authorization: str = Header(...)):
-      # Verify JWT from Neon Auth
-      # Extract user info from token
-  ```
-
-- [x ] **Step 4.5** - Create Pydantic schemas in `app/schemas/`
-  - `user.py` - UserResponse schema
-
-- [ x] **Step 4.6** - Set up frontend auth components
-  - Integrate Neon Auth login/signup UI
-  - Store auth tokens in frontend
-  - Add auth headers to API requests
-
-- [x ] **Step 4.7** - Test auth flow end-to-end
+- [x] **Step 4.1** - Get Neon Auth credentials (JWKS URL)
+- [x] **Step 4.2** - Install Neon Auth SDK in frontend (`@neondatabase/neon-js`)
+- [x] **Step 4.3** - Create `app/services/auth.py` — JWT verification via Neon JWKS
+- [x] **Step 4.4** - Create `get_current_user` dependency for protected routes
+- [x] **Step 4.5** - Create `app/schemas/user.py` — UserResponse schema
+- [x] **Step 4.6** - Set up frontend auth — `NeonAuthUIProvider`, `Auth.tsx`, `lib/auth.ts`
+- [x] **Step 4.7** - Test auth flow end-to-end
 
 ---
 
 ## Phase 5: OpenAI Integration
 > Turn user prompts into game filters
 
-- [ ] **Step 5.1** - Get OpenAI API key from https://platform.openai.com
-
-- [ ] **Step 5.2** - Create `app/services/openai_service.py`
-
-- [ ] **Step 5.3** - Design your JSON schema for game filters
+- [x] **Step 5.1** - Get OpenAI API key
+- [x] **Step 5.2** - Create `app/services/openai_service.py`
+  - Modern `OpenAI` client (gpt-4o-mini)
+  - `response_format={"type": "json_object"}` for guaranteed valid JSON
+- [x] **Step 5.3** - Design JSON schema for game filters
   ```json
   {
     "genres": ["rpg", "action"],
     "tags": ["story-rich", "open-world"],
     "mood": "relaxing",
     "multiplayer": false,
-    "platforms": ["pc"]
+    "platforms": ["pc"],
+    "search_query": "open world rpg"
   }
   ```
-
-- [ ] **Step 5.4** - Write the OpenAI prompt that generates this JSON
-
-- [ ] **Step 5.5** - Create router in `app/routers/prompt.py`
-  - POST `/prompt/parse` - Takes user prompt, returns game filters
-
-- [ ] **Step 5.6** - Add JSON validation with Pydantic
-
-- [ ] **Step 5.7** - Test with various user inputs
+- [x] **Step 5.4** - Write detailed system prompt with RAWG genre/tag constraints
+- [x] **Step 5.5** - Create `app/routers/prompt.py` — `POST /prompt/parse`
+  - Optional rate limiting for logged-in users (20 requests/day via RateLimit table)
+- [x] **Step 5.6** - Add Pydantic validation with `GameFilters` schema
+- [x] **Step 5.7** - Test with various user inputs
 
 ---
 
 ## Phase 6: Gaming API Integration
 > Fetch real game recommendations
 
-- [ ] **Step 6.1** - Sign up for RAWG API at https://rawg.io/apidocs
-
-- [ ] **Step 6.2** - Create `app/services/rawg_service.py`
-
-- [ ] **Step 6.3** - Map your JSON filters to RAWG query parameters
-
-- [ ] **Step 6.4** - Create router in `app/routers/games.py`
-  - POST `/games/recommend` - Takes filters, returns game list
-
-- [ ] **Step 6.5** - Test the full flow: prompt → OpenAI → RAWG → results
+- [x] **Step 6.1** - Sign up for RAWG API — get `RAWG_API_KEY`
+- [x] **Step 6.2** - Create `app/services/rawg_service.py`
+- [x] **Step 6.3** - Map JSON filters to RAWG query parameters
+  - `search_query` → RAWG `search` param (most impactful for relevance)
+  - `genres`, `tags`, `platforms` → RAWG filters
+  - `VALID_TAGS` set to prevent invalid tag filtering
+  - `PLATFORM_MAP` dict to convert platform names to RAWG IDs
+- [x] **Step 6.4** - Create `app/routers/games.py` — `POST /games/recommend`
+- [x] **Step 6.5** - Results limited to 3 games, ordered by rating
 
 ---
 
 ## Phase 7: Frontend Foundation
 > Build the React app structure
 
-- [ ] **Step 7.1** - Set up folder structure
-  ```
-  frontend/src/
-  ├── components/        # Reusable UI components
-  ├── pages/            # Route pages
-  ├── services/         # API calls
-  ├── hooks/            # Custom React hooks
-  ├── context/          # Auth context
-  ├── types/            # TypeScript types
-  └── App.tsx
-  ```
-
-- [ ] **Step 7.2** - Configure Tailwind CSS
-
-- [ ] **Step 7.3** - Set up React Router in `App.tsx`
-  - `/` - Home page
-  - `/login` - Login page
-  - `/signup` - Signup page
-  - `/saved` - Saved games page
-
-- [ ] **Step 7.4** - Create API service in `services/api.ts`
-  ```typescript
-  import axios from 'axios';
-
-  const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-  });
-  ```
-
-- [ ] **Step 7.5** - Create auth context for managing login state
+- [x] **Step 7.1** - Set up folder structure (`pages/`, `components/`, `services/`, `hooks/`, `types/`)
+- [x] **Step 7.2** - Configure Tailwind CSS v4 with NES color theme
+  - Colors: `nes-gold`, `nes-red`, `nes-blue`, `nes-green`, `nes-black`, `nes-dark`, `nes-white`, `nes-gray`
+  - Font: Press Start 2P (pixel font via Google Fonts)
+- [x] **Step 7.3** - Set up React Router — `/`, `/auth/sign-in`, `/auth/sign-up`, `/saved`, `/profile`
+- [x] **Step 7.4** - Create `services/api.ts` — axios instance pointing at `VITE_API_URL`
+- [x] **Step 7.5** - Auth state handled by `NeonAuthUIProvider` + `useAuth` hook
 
 ---
 
 ## Phase 8: Frontend UI
 > Build the main user interface
 
-- [ ] **Step 8.1** - Create Navbar component
-
-- [ ] **Step 8.2** - Create Login page
-
-- [ ] **Step 8.3** - Create Signup page
-
-- [ ] **Step 8.4** - Create Home page with prompt input
-
-- [ ] **Step 8.5** - Create GameCard component
-
-- [ ] **Step 8.6** - Create Results display (grid of GameCards)
-
-- [ ] **Step 8.7** - Add loading states and spinners
-
-- [ ] **Step 8.8** - Add error handling and error messages
+- [x] **Step 8.1** - Create `Navbar` — auth-aware (Profile/Saved when logged in, Login when not)
+- [x] **Step 8.2** - Auth pages handled by Neon Auth (`Auth.tsx`)
+- [x] **Step 8.3** - Create `Home` page with prompt textarea + search button
+- [x] **Step 8.4** - Create `GameCard` — cover image, title, rating, metacritic, release date, save button
+- [x] **Step 8.5** - Create results grid (3 GameCards)
+- [x] **Step 8.6** - Create `LoadingSpinner` component
+- [x] **Step 8.7** - Add error messages and states
 
 ---
 
-## Phase 9: Save & Like Features
-> Let users save their favorites
+## Phase 9: Save Features + Profile
+> Let users save games and view their profile
 
-- [ ] **Step 9.1** - Create backend endpoints in `app/routers/saved_games.py`
-  - POST `/saved-games` - Save a game
-  - GET `/saved-games` - Get user's saved games
-  - DELETE `/saved-games/{id}` - Remove saved game
-
-- [ ] **Step 9.2** - Add save/like buttons to GameCard component
-
-- [ ] **Step 9.3** - Create Saved Games page
-
-- [ ] **Step 9.4** - Show recommendation history
+- [x] **Step 9.1** - Create `app/routers/saved_games.py`
+  - `POST /saved-games` — save a game (upserts into games table)
+  - `GET /saved-games` — get user's saved games
+  - `DELETE /saved-games/{rawg_id}` — remove saved game
+- [x] **Step 9.2** - Add `+ SAVE` / `✓ SAVED` button to GameCard
+- [x] **Step 9.3** - Create `SavedGames` page — displays saved games with `✕ REMOVE`
+- [x] **Step 9.4** - Create `app/routers/profile.py` — `GET /profile`
+  - Returns email, saved games count, total searches, daily usage
+- [x] **Step 9.5** - Create `Profile` page — account info, stats, daily usage bar, quick links
+- [ ] **Step 9.6** - Recommendation history on profile (show past prompts + results)
 
 ---
 
-## Phase 10: Polish & Deploy
+## Phase 10: Guest Limiting + Rate Limiting
+> Control access and prevent abuse
+
+- [x] **Step 10.1** - Guest limit: 1 free search via `localStorage`
+  - After first search, show signup banner prompting account creation
+  - Second search attempt blocked with signup prompt
+- [x] **Step 10.2** - Logged-in rate limiting: 20 searches/day via `RateLimit` table
+  - `app/services/rate_limit.py` — `check_and_increment()`
+  - Returns 429 when daily limit exceeded
+- [ ] **Step 10.3** - Show remaining daily searches in Navbar for logged-in users
+
+---
+
+## Phase 11: Auth Fix + Settings + My Games
+> Fix login state reactivity and build new pages
+
+- [ ] **Step 11.1** - Fix `useAuth.ts` — replace one-time `getToken()` with reactive `useAuthenticate()` hook
+- [ ] **Step 11.2** - Clear `localStorage.guestRequestUsed` on login transition
+- [ ] **Step 11.3** - Update `Navbar.tsx` — show `HELLO, email` + MY GAMES + SETTINGS when logged in
+- [ ] **Step 11.4** - Redirect to `/` after sign-in/sign-up in `Auth.tsx`
+- [ ] **Step 11.5** - Create `backend/app/routers/account.py` — `DELETE /account` endpoint
+- [ ] **Step 11.6** - Register account router in `main.py`
+- [ ] **Step 11.7** - Create `src/pages/Settings.tsx` — email display + delete account with confirmation
+- [ ] **Step 11.8** - Add `/settings` route to `App.tsx`
+
+---
+
+## Phase 12: Polish & Deploy
 > Make it production-ready
 
-- [ ] **Step 10.1** - Add proper error handling throughout
-
-- [ ] **Step 10.2** - Make frontend responsive for mobile
-
-- [ ] **Step 10.3** - Add loading skeletons
-
-- [ ] **Step 10.4** - Write README.md with setup instructions
-
-- [ ] **Step 10.5** - Deploy backend to Railway (https://railway.app)
-  ```bash
-  # Railway auto-detects Python apps
-  ```
-
-- [ ] **Step 10.6** - Deploy frontend to Vercel
-  ```bash
-  cd frontend
-  npm run build
-  npx vercel
-  ```
-
-- [ ] **Step 10.7** - Update CORS and environment variables for production
-
-- [ ] **Step 10.8** - Test full production flow
+- [ ] **Step 11.1** - Add proper error handling throughout
+- [ ] **Step 11.2** - Make frontend responsive for mobile
+- [ ] **Step 11.3** - Add loading skeletons
+- [ ] **Step 11.4** - Write README.md with setup instructions
+- [ ] **Step 11.5** - Deploy backend to Railway
+- [ ] **Step 11.6** - Deploy frontend to Vercel
+- [ ] **Step 11.7** - Update CORS and environment variables for production
+- [ ] **Step 11.8** - Test full production flow
 
 ---
 
 ## Bonus Features (After MVP)
 > Nice-to-haves for later
 
+- [ ] Recommendation history page (past prompts + results)
+- [ ] User preferences page (excluded tags, preferred platforms, min metacritic)
 - [ ] Caching for similar prompts (Redis)
-- [ ] Rate limiting on API calls
 - [ ] Docker Compose for local development
 - [ ] Share recommendations with friends
-- [ ] Dark mode toggle
 - [ ] Game details page
-- [ ] User profile page
 
 ---
 
-## File Structure Reference
-
-```
-dwisp/
-├── docs/
-│   ├── claude-notes.md
-│   ├── tech-stack.md
-│   ├── folder-structure.md
-│   └── roadmap.md
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py
-│   │   ├── config.py
-│   │   ├── database.py
-│   │   ├── models/
-│   │   │   ├── __init__.py
-│   │   │   ├── game.py
-│   │   │   ├── recommendation.py
-│   │   │   └── saved_game.py
-│   │   ├── schemas/
-│   │   │   ├── __init__.py
-│   │   │   ├── user.py
-│   │   │   ├── game.py
-│   │   │   └── prompt.py
-│   │   ├── routers/
-│   │   │   ├── __init__.py
-│   │   │   ├── prompt.py
-│   │   │   ├── games.py
-│   │   │   └── saved_games.py
-│   │   └── services/
-│   │       ├── __init__.py
-│   │       ├── auth.py            # Neon Auth token verification
-│   │       ├── openai_service.py
-│   │       └── rawg_service.py
-│   ├── alembic/
-│   ├── alembic.ini
-│   ├── requirements.txt
-│   └── .env
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── GameCard.tsx
-│   │   │   ├── PromptInput.tsx
-│   │   │   └── LoadingSpinner.tsx
-│   │   ├── pages/
-│   │   │   ├── Home.tsx
-│   │   │   ├── Auth.tsx           # Neon Auth integration
-│   │   │   └── SavedGames.tsx
-│   │   ├── services/
-│   │   │   └── api.ts
-│   │   ├── context/
-│   │   │   └── AuthContext.tsx
-│   │   ├── types/
-│   │   │   └── index.ts
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── package.json
-│   └── .env
-├── .gitignore
-└── README.md
-```
-
----
-
-## Commands Cheat Sheet
-
-```bash
-# Backend
-cd backend
-source venv/bin/activate
-uvicorn app.main:app --reload        # Run dev server
-alembic revision --autogenerate -m "msg"  # Create migration
-alembic upgrade head                  # Apply migrations
-
-# Frontend
-cd frontend
-npm run dev                          # Run dev server
-npm run build                        # Build for production
-```
-
----
-
-*10 Phases | Take it one step at a time!*
+*11 Phases | Take it one step at a time!*

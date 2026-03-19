@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import GameCard from '../components/GameCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import api from '../services/api';
-import { authClient } from '../lib/auth';
+import { getToken } from '../lib/auth';
 import { useAuth } from '../hooks/useAuth';
 import type { GameFilters, GameResult } from '../types';
 
@@ -56,7 +56,7 @@ function Home() {
 
   async function handleSave(game: GameResult) {
     try {
-      const t = token ?? await authClient.getToken();
+      const t = token ?? await getToken();
       if (!t) {
         setShowSignupBanner(true);
         return;

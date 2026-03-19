@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Auth from './pages/Auth';
 import SavedGames from './pages/SavedGames';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/auth/sign-in" element={<Auth />} />
       <Route path="/saved" element={<SavedGames />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/settings" element={<Settings />} />
     </Routes>
   );
 }

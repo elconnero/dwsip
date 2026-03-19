@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import api from '../services/api';
-import { authClient } from '../lib/auth';
+import { getToken } from '../lib/auth';
 import type { GameResult } from '../types';
 
 function SavedGames() {
@@ -17,7 +17,7 @@ function SavedGames() {
 
   async function fetchSaved() {
     try {
-      const token = await authClient.getToken();
+      const token = await getToken();
       if (!token) {
         setError('YOU MUST BE LOGGED IN TO VIEW SAVED GAMES.');
         setLoading(false);
@@ -36,7 +36,7 @@ function SavedGames() {
 
   async function handleRemove(rawgId: number) {
     try {
-      const token = await authClient.getToken();
+      const token = await getToken();
       await api.delete(`/saved-games/${rawgId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

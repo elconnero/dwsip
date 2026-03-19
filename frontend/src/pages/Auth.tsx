@@ -1,9 +1,18 @@
 import { AuthView } from '@neondatabase/neon-js/auth/react';
-import { useLocation } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
 
 function Auth() {
   const { pathname } = useLocation();
+  const { isLoggedIn, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn, loading, navigate]);
 
   return (
     <div className="min-h-screen bg-nes-dark flex flex-col items-center justify-center px-4 py-12">

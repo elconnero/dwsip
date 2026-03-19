@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 function Navbar() {
-  const { isLoggedIn, loading } = useAuth();
+  const { isLoggedIn, loading, email } = useAuth();
 
   return (
     <nav className="w-full border-b-4 border-nes-gold bg-nes-black px-6 py-4 flex items-center justify-between">
@@ -15,11 +15,14 @@ function Navbar() {
           <>
             {isLoggedIn ? (
               <>
-                <Link to="/profile" className="text-nes-white text-xs no-underline hover:text-nes-gold transition-colors">
-                  PROFILE
-                </Link>
+                <span className="text-nes-gold text-xs">
+                  HELLO, {email ?? 'PLAYER'}
+                </span>
                 <Link to="/saved" className="text-nes-white text-xs no-underline hover:text-nes-gold transition-colors">
                   SAVED
+                </Link>
+                <Link to="/settings" className="text-nes-white text-xs no-underline hover:text-nes-gold transition-colors">
+                  SETTINGS
                 </Link>
               </>
             ) : (
