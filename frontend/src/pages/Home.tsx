@@ -11,7 +11,7 @@ import type { GameFilters, GameResult } from '../types';
 const GUEST_REQUEST_KEY = 'guestRequestUsed';
 
 function Home() {
-  const { token, isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [prompt, setPrompt]         = useState('');
   const [games, setGames]           = useState<GameResult[]>([]);
   const [savedIds, setSavedIds]     = useState<Set<number>>(new Set());
@@ -56,7 +56,7 @@ function Home() {
 
   async function handleSave(game: GameResult) {
     try {
-      const t = token ?? await getToken();
+      const t = await getToken();
       if (!t) {
         setShowSignupBanner(true);
         return;

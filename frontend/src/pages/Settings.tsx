@@ -6,7 +6,7 @@ import { authClient, getToken } from '../lib/auth';
 import { useAuth } from '../hooks/useAuth';
 
 function Settings() {
-  const { isLoggedIn, loading, email, token } = useAuth();
+  const { isLoggedIn, loading, email } = useAuth();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting]     = useState(false);
@@ -16,7 +16,7 @@ function Settings() {
     setDeleting(true);
     setError('');
     try {
-      const t = token ?? await getToken();
+      const t = await getToken();
       await api.delete('/account', {
         headers: { Authorization: `Bearer ${t}` },
       });

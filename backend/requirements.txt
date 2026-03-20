@@ -3,7 +3,7 @@ uvicorn[standard]
 sqlalchemy
 alembic
 psycopg2-binary
-python-jose[cryptography]
+PyJWT[crypto]
 passlib[bcrypt]
 python-dotenv
 openai
