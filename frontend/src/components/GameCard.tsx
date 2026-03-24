@@ -13,10 +13,10 @@ function GameCard({ game, onSave, saved = false }: Props) {
         <img
           src={game.background_image}
           alt={game.name}
-          className="w-full h-40 object-cover"
+          className="w-full aspect-video object-cover"
         />
       ) : (
-        <div className="w-full h-40 bg-nes-gray flex items-center justify-center text-nes-black text-xs">
+        <div className="w-full aspect-video bg-nes-gray flex items-center justify-center text-nes-black text-xs">
           NO IMAGE
         </div>
       )}

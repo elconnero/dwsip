@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from app.schemas.prompt import GameFilters
 
 
 class GameResult(BaseModel):
@@ -8,3 +9,7 @@ class GameResult(BaseModel):
     rating:           float | None = None
     metacritic:       int | None = None
     released:         str | None = None
+
+
+class RecommendRequest(GameFilters):
+    user_prompt: str | None = None

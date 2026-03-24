@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { authClient } from '../lib/auth';
 
 function Navbar() {
   const { isLoggedIn, loading, email } = useAuth();
@@ -18,12 +19,18 @@ function Navbar() {
                 <span className="text-nes-gold text-xs">
                   HELLO, {email ?? 'PLAYER'}
                 </span>
-                <Link to="/saved" className="text-nes-white text-xs no-underline hover:text-nes-gold transition-colors">
-                  SAVED
+                <Link to="/my-games" className="text-nes-white text-xs no-underline hover:text-nes-gold transition-colors">
+                  MY GAMES
                 </Link>
                 <Link to="/settings" className="text-nes-white text-xs no-underline hover:text-nes-gold transition-colors">
                   SETTINGS
                 </Link>
+                <button
+                  onClick={() => authClient.signOut({ callbackURL: '/' })}
+                  className="text-nes-red text-xs hover:text-nes-white transition-colors cursor-pointer bg-transparent border-none"
+                >
+                  LOGOUT
+                </button>
               </>
             ) : (
               <>

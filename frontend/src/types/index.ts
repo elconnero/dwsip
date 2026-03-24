@@ -1,10 +1,11 @@
 export interface GameFilters {
-  genres:       string[];
-  tags:         string[];
-  mood:         string;
-  multiplayer:  boolean;
-  platforms:    string[];
-  search_query: string;
+  genres:          string[];
+  tags:            string[];
+  mood:            string;
+  multiplayer:     boolean;
+  platforms:       string[];
+  search_query:    string;
+  predicted_game:  string | null;
 }
 
 export interface GameResult {

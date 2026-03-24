@@ -18,6 +18,7 @@ function Home() {
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState('');
   const [showSignupBanner, setShowSignupBanner] = useState(false);
+  const [predictedGame, setPredictedGame]       = useState<string | null>(null);
 
   function guestRequestUsed(): boolean {
     return localStorage.getItem(GUEST_REQUEST_KEY) === 'true';
@@ -36,10 +37,17 @@ function Home() {
     setError('');
     setGames([]);
     setShowSignupBanner(false);
+    setPredictedGame(null);
 
     try {
       const { data: filters } = await api.post<GameFilters>('/prompt/parse', { prompt });
-      const { data: results } = await api.post<GameResult[]>('/games/recommend', filters);
+      if (filters.predicted_game) setPredictedGame(filters.predicted_game);
+      const t = await getToken();
+      const { data: results } = await api.post<GameResult[]>(
+        '/games/recommend',
+        { ...filters, user_prompt: prompt },
+        t ? { headers: { Authorization: `Bearer ${t}` } } : {},
+      );
       setGames(results);
 
       // Mark guest request as used
@@ -135,6 +143,14 @@ function Home() {
             >
               ▶ CREATE ACCOUNT
             </Link>
+          </div>
+        )}
+
+        {/* Predicted game banner */}
+        {predictedGame && (
+          <div className="w-full max-w-2xl border-4 border-nes-white bg-nes-black px-6 py-4 text-center">
+            <p className="text-nes-gray text-xs mb-2">WE THINK YOU'RE LOOKING FOR:</p>
+            <p className="text-nes-white text-sm leading-loose">{predictedGame.toUpperCase()}</p>
           </div>
         )}
 

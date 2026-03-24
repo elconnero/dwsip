@@ -34,7 +34,9 @@ def fetch_games(filters: GameFilters, page_size: int = 3) -> list[dict]:
         "ordering":  "-rating",
     }
 
-    if filters.search_query:
+    if filters.predicted_game:
+        params["search"] = filters.predicted_game
+    elif filters.search_query:
         params["search"] = filters.search_query
 
     if filters.genres:

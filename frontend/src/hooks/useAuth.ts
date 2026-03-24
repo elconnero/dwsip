@@ -2,7 +2,7 @@ import { useAuthenticate } from '@neondatabase/neon-js/auth/react';
 import { useEffect, useRef } from 'react';
 
 export function useAuth() {
-  const { user, isPending } = useAuthenticate();
+  const { user, isPending } = useAuthenticate({ enabled: false });
   const wasLoggedIn = useRef(false);
 
   useEffect(() => {

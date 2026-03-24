@@ -14,7 +14,8 @@ JSON structure:
   "mood": "<mood>",
   "multiplayer": false,
   "platforms": ["<platform_1>"],
-  "search_query": "<2-4 word theme phrase>"
+  "search_query": "<2-4 word theme phrase>",
+  "predicted_game": "<single game title or null>"
 }
 
 RULES:
@@ -50,7 +51,7 @@ RULES:
 9. "platforms" must include only explicitly mentioned or strongly implied platforms:
    "pc", "playstation", "xbox", "switch", "mobile"
 10. Normalize all values to lowercase. Remove duplicates. Keep array entries short and standardized.
-11. Do not guess specific games.
+11. "predicted_game" must be the single most likely real game title the user is describing, based on the full context of their prompt. Use your knowledge of games to make a confident prediction. If the prompt is too vague or generic to identify a specific game, return null.
 12. If the prompt is unrelated to games, return valid JSON with empty arrays, empty mood, and multiplayer: false.
 13. "search_query" must be a short 2-4 word English phrase capturing the core theme or setting of
     the prompt, suitable as a game database text search. This is the most important field for
