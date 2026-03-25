@@ -22,3 +22,5 @@ app.include_router(my_games.router)
 @app.get("/health_check")
 def health_check():
     return {"status": "healthy"}
+
+me = 0
